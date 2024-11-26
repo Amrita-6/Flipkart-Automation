@@ -1,15 +1,21 @@
 package demo;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -51,6 +57,85 @@ public class TestCases {
         driver = new ChromeDriver(options);
 
         driver.manage().window().maximize();
+    }
+
+    @Test
+    public void testCase01() throws InterruptedException{
+       System.out.println("Start Test case 01");
+       driver.get("https://www.flipkart.com/");
+    //    double starRating = 4.0;
+    //    //click on cancel icon
+    //    //Wrappers.clickElement(driver, By.xpath("//span[@role='button']"));
+    //Wrappers.searchProduct(driver, By.xpath("//input[@title = 'Search for Products, Brands and More']"), "Washing Machine");
+    WebElement inputBox = driver.findElement(By.xpath("//input[@title = 'Search for Products, Brands and More']"));
+    inputBox.click();
+    inputBox.clear();
+    inputBox.sendKeys("Washing Machine");
+    inputBox.sendKeys(Keys.ENTER);
+
+    Thread.sleep(3000);
+
+    Wrappers.clickElement(driver, By.xpath("//div[text()='Popularity']"));
+    Thread.sleep(2000);
+    //    Boolean status =  Wrappers.searchStarRatingAndPrintCount(driver, By.xpath("//span[contains(@id , 'productRating')]/div"), starRating);
+
+    //    Assert.assertTrue(status);
+
+    // WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30)); 
+    // wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(@id , 'productRating')]/div")));
+    List<WebElement> starRatingElements = driver.findElements(By.xpath("//span[contains(@id , 'productRating')]/div"));
+    for(WebElement ratingElement : starRatingElements){
+       double rating  =  Double.parseDouble(ratingElement.getText());
+       if(rating <=4.0){
+        System.out.println(ratingElement.getText());
+       }
+    }
+       System.out.println("End Test case 01");
+
+    }
+
+
+    @Test
+    public void testCase02() throws InterruptedException{
+       System.out.println("Start Test case 02");
+       driver.get("https://www.flipkart.com/");
+       Thread.sleep(3000);
+        // WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30)); 
+        // wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@title = 'Search for Products, Brands and More']")));   
+       //click on cancel icon
+        Wrappers.clickElement(driver, By.xpath("//span[@role='button']"));
+       //Wrappers.searchProduct(driver, By.xpath("//input[@title = 'Search for Products, Brands and More']"), "iPhone");
+       WebElement inputBox = driver.findElement(By.xpath("//input[@title = 'Search for Products, Brands and More']"));
+       
+       inputBox.click();
+       inputBox.clear();
+       inputBox.sendKeys("iPhone");
+       inputBox.sendKeys(Keys.ENTER);
+       Thread.sleep(3000);
+
+       Boolean status =  Wrappers.printTitleAndDiscount(driver, By.xpath("//div[contains(@class, 'yKfJKb')]"), 17);
+       Assert.assertTrue(status);
+       System.out.println("End Test case 02");
+
+    }
+
+
+    @Test
+    public void testCase03() throws InterruptedException{
+       System.out.println("Start Test case 03");
+       driver.get("https://www.flipkart.com/");
+       //click on cancel icon
+       Wrappers.clickElement(driver, By.xpath("//span[@role='button']"));
+       Wrappers.searchProduct(driver, By.xpath("//input[@title = 'Search for Products, Brands and More']"), "Coffee Mug");
+       Thread.sleep(3000);
+
+       Wrappers.clickElement(driver, By.xpath("//div[text() = '4★ & above']"));
+       Thread.sleep(3000);
+
+       Boolean status =  Wrappers.printTitleAndImageUrl(driver, By.xpath("//div[@class = 'slAVV4']//span[@class = 'Wphh3N']"));
+       Assert.assertTrue(status);
+       System.out.println("End Test case 03");
+
     }
 
     @AfterTest
